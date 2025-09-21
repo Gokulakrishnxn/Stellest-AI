@@ -1,13 +1,8 @@
-#!/usr/bin/env python3
-"""
-Vercel Serverless Function for Health Check
-"""
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 
-app = FastAPI(title="Stellest AI Health", version="1.0.0")
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,7 +14,6 @@ app.add_middleware(
 
 @app.get("/")
 async def health():
-    """Health check endpoint"""
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
@@ -27,7 +21,3 @@ async def health():
         "version": "1.0.0",
         "message": "Stellest AI Platform is running"
     }
-
-# Vercel handler
-def handler(request):
-    return app
