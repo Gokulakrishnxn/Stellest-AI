@@ -92,7 +92,7 @@ class StellestAIApp {
         this.setLoadingState(true);
         
         try {
-            const response = await fetch('/predict', {
+            const response = await fetch('/api/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
