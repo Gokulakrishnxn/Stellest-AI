@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Prediction - Stellest AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+        button {
+            background: #fff;
+            color: #000;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #ddd;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #222;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #2a1a1a;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔮 Stellest AI Prediction Test</h1>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="patient_name">Patient Name:</label>
+            <input type="text" id="patient_name" name="patient_name" value="Emma Johnson" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="age">Age (years):</label>
+            <input type="number" id="age" name="age" value="10" min="4" max="25" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="age_myopia_diagnosis">Age at Myopia Diagnosis:</label>
+            <input type="number" id="age_myopia_diagnosis" name="age_myopia_diagnosis" value="7" min="2" max="20" step="0.1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="1" selected>Male</option>
+                <option value="2">Female</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="family_history_myopia">Family History of Myopia:</label>
+            <select id="family_history_myopia" name="family_history_myopia" required>
+                <option value="">Select</option>
+                <option value="0" selected>No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="outdoor_time">Outdoor Time (hours/day):</label>
+            <input type="number" id="outdoor_time" name="outdoor_time" value="3.5" min="0" max="12" step="0.5" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="screen_time">Screen Time (hours/day):</label>
+            <input type="number" id="screen_time" name="screen_time" value="2.0" min="0" max="16" step="0.5" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="previous_myopia_control">Previous Myopia Control:</label>
+            <select id="previous_myopia_control" name="previous_myopia_control" required>
+                <option value="">Select</option>
+                <option value="0" selected>No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="stellest_wearing_time">Stellest Wearing Time (hours/day):</label>
+            <input type="number" id="stellest_wearing_time" name="stellest_wearing_time" value="14.0" min="8" max="18" step="0.5" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="initial_power_re">Initial Power RE (diopters):</label>
+            <input type="number" id="initial_power_re" name="initial_power_re" value="-1.5" step="0.25" max="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="initial_power_le">Initial Power LE (diopters):</label>
+            <input type="number" id="initial_power_le" name="initial_power_le" value="-1.25" step="0.25" max="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="initial_axial_length_re">Initial Axial Length RE (mm):</label>
+            <input type="number" id="initial_axial_length_re" name="initial_axial_length_re" value="22.8" step="0.01" min="20" max="30" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="initial_axial_length_le">Initial Axial Length LE (mm):</label>
+            <input type="number" id="initial_axial_length_le" name="initial_axial_length_le" value="22.7" step="0.01" min="20" max="30" required>
+        </div>
+        
+        <button type="submit">🔮 Get AI Prediction</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="loading">⏳ Getting AI prediction...</div>';
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Convert form data to proper format
+            for (let [key, value] of formData.entries()) {
+                if (key === 'patient_name') {
+                    data[key] = value;
+                } else {
+                    data[key] = parseFloat(value);
+                }
+            }
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Display results
+                const probability = (result.ensemble_prediction.probability * 100).toFixed(1);
+                const confidence = result.ensemble_prediction.confidence;
+                const willBenefit = result.ensemble_prediction.will_benefit;
+                const recommendation = result.recommendation;
+                const processingTime = result.processing_time;
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <h2>🎯 AI Prediction Results</h2>
+                        <p><strong>Patient:</strong> ${result.patient_name}</p>
+                        <p><strong>Success Probability:</strong> ${probability}%</p>
+                        <p><strong>Confidence Level:</strong> ${confidence}</p>
+                        <p><strong>Recommendation:</strong> ${willBenefit ? '✅ Recommended' : '⚠️ Consider Alternatives'}</p>
+                        <p><strong>Processing Time:</strong> ${processingTime} seconds</p>
+                        <hr style="margin: 20px 0; border-color: #555;">
+                        <h3>📋 Detailed Recommendation:</h3>
+                        <p>${recommendation}</p>
+                        <hr style="margin: 20px 0; border-color: #555;">
+                        <h3>🤖 Individual Model Results:</h3>
+                        ${Object.entries(result.individual_models).map(([model, data]) => `
+                            <p><strong>${model}:</strong> ${(data.probability * 100).toFixed(1)}% (${data.confidence})</p>
+                        `).join('')}
+                        <hr style="margin: 20px 0; border-color: #555;">
+                        <h3>⚠️ Risk Factors:</h3>
+                        ${result.risk_factors.high_risk && result.risk_factors.high_risk.length > 0 ? 
+                            `<p><strong>High Risk:</strong> ${result.risk_factors.high_risk.join(', ')}</p>` : ''}
+                        ${result.risk_factors.medium_risk && result.risk_factors.medium_risk.length > 0 ? 
+                            `<p><strong>Medium Risk:</strong> ${result.risk_factors.medium_risk.join(', ')}</p>` : ''}
+                        ${result.risk_factors.protective && result.risk_factors.protective.length > 0 ? 
+                            `<p><strong>Protective Factors:</strong> ${result.risk_factors.protective.join(', ')}</p>` : ''}
+                    </div>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h2>❌ Error</h2>
+                        <p>Failed to get prediction: ${error.message}</p>
+                        <p>Please check that the server is running and try again.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

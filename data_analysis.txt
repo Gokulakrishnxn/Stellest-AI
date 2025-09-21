@@ -1,0 +1,92 @@
+Dataset shape: (250, 43)
+Columns: ['                 ', 'Date', 'Patient name', 'Age of Myopia Diagnosis', 'Age', 'Gender', 'H/O Myopic Parents', 'Outdoor Time', 'Screen Time', 'H/O Myopia Control', 'H/O Myopia Progression (previous 1 year)', 'Unnamed: 11', 'H/O Myopia Progression (previous 1 year).1', 'Unnamed: 13', 'Right Eye (At the time of initiation of Stellest)', 'Unnamed: 15', 'Left Eye  (At the time of initiation of Stellest)', 'Unnamed: 17', 'Right Eye (At the time of initiation of Stellest).1', 'Left Eye (At the time of initiation of Stellest)', 'Stellest Wearing Time', 'Visual Acuity', 'Binocular Vision Status', 'Keratometry', '1st Follow-up Visit', 'Unnamed: 25', 'Unnamed: 26', 'Unnamed: 27', 'Unnamed: 28', 'Unnamed: 29', 'Unnamed: 30', 'Unnamed: 31', '2nd Follow-up Visit', 'Unnamed: 33', 'Unnamed: 34', 'Unnamed: 35', 'Unnamed: 36', 'Unnamed: 37', 'Unnamed: 38', 'Unnamed: 39', 'QoL (1 - Poor; 5- Improved)', 'Other Ocular Conditions', 'Adverse Events']
+Data types:
+                                                       float64
+Date                                                    object
+Patient name                                            object
+Age of Myopia Diagnosis                                 object
+Age                                                     object
+Gender                                                  object
+H/O Myopic Parents                                      object
+Outdoor Time                                            object
+Screen Time                                             object
+H/O Myopia Control                                      object
+H/O Myopia Progression (previous 1 year)                object
+Unnamed: 11                                             object
+H/O Myopia Progression (previous 1 year).1              object
+Unnamed: 13                                             object
+Right Eye (At the time of initiation of Stellest)       object
+Unnamed: 15                                             object
+Left Eye  (At the time of initiation of Stellest)       object
+Unnamed: 17                                             object
+Right Eye (At the time of initiation of Stellest).1     object
+Left Eye (At the time of initiation of Stellest)        object
+Stellest Wearing Time                                   object
+Visual Acuity                                           object
+Binocular Vision Status                                 object
+Keratometry                                             object
+1st Follow-up Visit                                     object
+Unnamed: 25                                             object
+Unnamed: 26                                             object
+Unnamed: 27                                             object
+Unnamed: 28                                             object
+Unnamed: 29                                             object
+Unnamed: 30                                             object
+Unnamed: 31                                             object
+2nd Follow-up Visit                                     object
+Unnamed: 33                                             object
+Unnamed: 34                                             object
+Unnamed: 35                                             object
+Unnamed: 36                                             object
+Unnamed: 37                                             object
+Unnamed: 38                                             object
+Unnamed: 39                                             object
+QoL (1 - Poor; 5- Improved)                            float64
+Other Ocular Conditions                                 object
+Adverse Events                                          object
+dtype: object
+Missing values:
+                                                         2
+Date                                                     8
+Patient name                                             8
+Age of Myopia Diagnosis                                 21
+Age                                                      8
+Gender                                                   8
+H/O Myopic Parents                                      66
+Outdoor Time                                           178
+Screen Time                                            178
+H/O Myopia Control                                      89
+H/O Myopia Progression (previous 1 year)                13
+Unnamed: 11                                             14
+H/O Myopia Progression (previous 1 year).1              11
+Unnamed: 13                                             11
+Right Eye (At the time of initiation of Stellest)        7
+Unnamed: 15                                              7
+Left Eye  (At the time of initiation of Stellest)        7
+Unnamed: 17                                              7
+Right Eye (At the time of initiation of Stellest).1     48
+Left Eye (At the time of initiation of Stellest)        48
+Stellest Wearing Time                                    7
+Visual Acuity                                            7
+Binocular Vision Status                                  7
+Keratometry                                             30
+1st Follow-up Visit                                    126
+Unnamed: 25                                            128
+Unnamed: 26                                            128
+Unnamed: 27                                            128
+Unnamed: 28                                            128
+Unnamed: 29                                            141
+Unnamed: 30                                            141
+Unnamed: 31                                            130
+2nd Follow-up Visit                                    232
+Unnamed: 33                                            233
+Unnamed: 34                                            233
+Unnamed: 35                                            233
+Unnamed: 36                                            233
+Unnamed: 37                                            241
+Unnamed: 38                                            241
+Unnamed: 39                                            234
+QoL (1 - Poor; 5- Improved)                            245
+Other Ocular Conditions                                241
+Adverse Events                                         241
+dtype: int64

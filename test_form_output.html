@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Form Output - Stellest Lens Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background: #f8f9fa; }
+        .test-card { margin-bottom: 20px; }
+        .json-output { background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Form Output</h1>
+        <p class="lead">This page helps test the form submission and shows the exact API output.</p>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card test-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5>📝 Quick Test Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="testForm">
+                            <div class="mb-3">
+                                <label class="form-label">Age *</label>
+                                <input type="number" class="form-control" id="age" value="12" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Age at Myopia Diagnosis *</label>
+                                <input type="number" class="form-control" id="age_myopia_diagnosis" value="8" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gender *</label>
+                                <select class="form-select" id="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="1">Male</option>
+                                    <option value="2" selected>Female</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Family History of Myopia *</label>
+                                <select class="form-select" id="family_history_myopia" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1" selected>Yes</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Outdoor Time (hours/day) *</label>
+                                <input type="number" class="form-control" id="outdoor_time" value="1.5" step="0.5" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Screen Time (hours/day) *</label>
+                                <input type="number" class="form-control" id="screen_time" value="4.0" step="0.5" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Previous Myopia Control *</label>
+                                <select class="form-select" id="previous_myopia_control" required>
+                                    <option value="">Select</option>
+                                    <option value="0" selected>No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial Power - Right Eye (D) *</label>
+                                <input type="number" class="form-control" id="initial_power_re" value="-3.5" step="0.25" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial Power - Left Eye (D) *</label>
+                                <input type="number" class="form-control" id="initial_power_le" value="-3.25" step="0.25" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial Axial Length - Right Eye (mm) *</label>
+                                <input type="number" class="form-control" id="initial_axial_length_re" value="24.5" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Initial Axial Length - Left Eye (mm) *</label>
+                                <input type="number" class="form-control" id="initial_axial_length_le" value="24.3" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Stellest Wearing Time (hours/day) *</label>
+                                <input type="number" class="form-control" id="stellest_wearing_time" value="14.0" step="0.5" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                🔮 Test Prediction
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card test-card">
+                    <div class="card-header bg-success text-white">
+                        <h5>📊 API Output</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="output">
+                            <p class="text-muted">Submit the form to see the API output...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card test-card">
+                    <div class="card-header bg-info text-white">
+                        <h5>🔍 Form Data Being Sent</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="formData">
+                            <p class="text-muted">Form data will appear here...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h6>📋 What the "422 Unprocessable Entity" Error Means:</h6>
+                    <ul>
+                        <li><strong>422 Error</strong> = Required fields are missing or invalid</li>
+                        <li><strong>All 12 fields</strong> must be filled in completely</li>
+                        <li><strong>Number fields</strong> must contain valid numbers</li>
+                        <li><strong>Select fields</strong> must have an option selected</li>
+                        <li><strong>Field ranges</strong> must be within specified limits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {};
+            const requiredFields = [
+                'age', 'age_myopia_diagnosis', 'gender', 'family_history_myopia',
+                'outdoor_time', 'screen_time', 'previous_myopia_control',
+                'initial_power_re', 'initial_power_le', 'initial_axial_length_re',
+                'initial_axial_length_le', 'stellest_wearing_time'
+            ];
+            
+            requiredFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    const value = element.value;
+                    if (['gender', 'family_history_myopia', 'previous_myopia_control'].includes(fieldId)) {
+                        formData[fieldId] = parseInt(value);
+                    } else {
+                        formData[fieldId] = parseFloat(value);
+                    }
+                }
+            });
+            
+            // Show form data being sent
+            document.getElementById('formData').innerHTML = 
+                '<div class="json-output">' + JSON.stringify(formData, null, 2) + '</div>';
+            
+            // Make API call
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Show successful output
+                    document.getElementById('output').innerHTML = `
+                        <div class="alert alert-success">
+                            <h6>✅ Prediction Successful!</h6>
+                        </div>
+                        <div class="json-output">${JSON.stringify(result, null, 2)}</div>
+                    `;
+                } else {
+                    // Show error
+                    document.getElementById('output').innerHTML = `
+                        <div class="alert alert-danger">
+                            <h6>❌ Error ${response.status}: ${response.statusText}</h6>
+                            <p><strong>Meaning:</strong> ${getErrorMeaning(response.status)}</p>
+                        </div>
+                        <div class="json-output">${JSON.stringify(result, null, 2)}</div>
+                    `;
+                }
+                
+            } catch (error) {
+                document.getElementById('output').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6>❌ Connection Error</h6>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        });
+        
+        function getErrorMeaning(status) {
+            switch(status) {
+                case 422: return "Required fields are missing or have invalid values";
+                case 503: return "AI model is not loaded or available";
+                case 500: return "Internal server error - check server logs";
+                default: return "Unknown error occurred";
+            }
+        }
+    </script>
+</body>
+</html>

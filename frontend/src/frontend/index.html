@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="AI-powered platform for predicting Stellest Lens effectiveness in myopia progression">
+    <meta name="keywords" content="myopia, Stellest Lens, AI prediction, eye care, vision therapy">
+    <title>Stellest Lens AI Predictor | Myopia Treatment Prediction</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="/app.js" as="script">
+    
+    <!-- Critical CSS -->
+    <style>
+        :root {
+            --primary-black: #000000;
+            --secondary-white: #ffffff;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --border-radius: 0.75rem;
+            --border-radius-lg: 1rem;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-black);
+            color: var(--secondary-white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Loading skeleton */
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--gray-800) 25%, var(--gray-700) 50%, var(--gray-800) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Hide content until loaded */
+        .content-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .content-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile-first responsive design */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 480px) {
+            .container { padding: 0 1.25rem; }
+        }
+
+        @media (min-width: 640px) {
+            .container { padding: 0 1.5rem; }
+        }
+
+        @media (min-width: 768px) {
+            .container { padding: 0 1.75rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .container { padding: 0 2rem; }
+        }
+
+        @media (min-width: 1280px) {
+            .container { padding: 0 2.5rem; }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-800);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: none;
+            gap: 1.5rem;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-800);
+            padding: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .nav-link {
+            color: var(--gray-300);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-white);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--secondary-white);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            color: var(--secondary-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--gray-300);
+        }
+
+        /* Small phones */
+        @media (min-width: 480px) {
+            .nav-menu {
+                gap: 2rem;
+                flex-direction: row;
+                position: static;
+                background: none;
+                border: none;
+                padding: 0;
+            }
+            
+            .nav-link {
+                text-align: left;
+                padding: 0;
+            }
+            
+            .nav-link::after {
+                left: 0;
+                transform: none;
+            }
+        }
+
+        /* Tablets and up */
+        @media (min-width: 768px) {
+            .nav-menu { 
+                display: flex; 
+                gap: 2rem;
+            }
+            .mobile-menu-btn { display: none; }
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--gray-900);
+            border: 1px solid var(--gray-800);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-header {
+            background: var(--gray-800);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-700);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary-white);
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--secondary-white);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--gray-800);
+            border: 1px solid var(--gray-700);
+            border-radius: var(--border-radius);
+            color: var(--secondary-white);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-white);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--gray-400);
+        }
+
+        .form-row {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        /* Small phones (320px+) */
+        @media (min-width: 320px) {
+            .form-row { gap: 0.75rem; }
+        }
+
+        /* Large phones (480px+) */
+        @media (min-width: 480px) {
+            .form-row { gap: 1rem; }
+        }
+
+        /* Small tablets (640px+) */
+        @media (min-width: 640px) {
+            .form-row { 
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+
+        /* Tablets (768px+) */
+        @media (min-width: 768px) {
+            .form-row { 
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        /* Large tablets/small desktops (1024px+) */
+        @media (min-width: 1024px) {
+            .form-row { 
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        /* Large desktops (1280px+) */
+        @media (min-width: 1280px) {
+            .form-row { 
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 44px; /* Touch-friendly */
+        }
+
+        .btn-primary {
+            background: var(--secondary-white);
+            color: var(--primary-black);
+        }
+
+        .btn-primary:hover {
+            background: var(--gray-200);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-800);
+            color: var(--secondary-white);
+            border: 1px solid var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-700);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--secondary-white);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--primary-black);
+        }
+
+        .btn-error {
+            background: var(--error);
+            color: var(--secondary-white);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-800);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            font-size: 0.875rem;
+            min-width: fit-content;
+        }
+
+        .tab.active {
+            color: var(--secondary-white);
+            border-bottom-color: var(--secondary-white);
+        }
+
+        .tab:hover {
+            color: var(--secondary-white);
+        }
+
+        @media (min-width: 480px) {
+            .tab {
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .tab {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Results responsive layout */
+        .results-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 640px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .results-grid {
+                gap: 2rem;
+            }
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--error);
+            color: var(--error);
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--info);
+            color: var(--info);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            border-top: 1px solid var(--gray-800);
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr auto;
+                text-align: left;
+            }
+        }
+
+        .footer-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--secondary-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-description {
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-links { justify-content: flex-end; }
+        }
+
+        .footer-link {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--secondary-white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--gray-800);
+            padding-top: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 479px) {
+            .main-content {
+                padding: 0.75rem 0;
+            }
+            
+            .card-body {
+                padding: 0.75rem;
+            }
+            
+            .card-header {
+                padding: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                padding: 0.875rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .form-control {
+                padding: 0.625rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .form-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.375rem;
+            }
+        }
+
+        @media (min-width: 480px) and (max-width: 767px) {
+            .main-content {
+                padding: 1rem 0;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .btn {
+                width: auto;
+                min-width: 200px;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --gray-800: #000000;
+                --gray-700: #000000;
+                --gray-600: #ffffff;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>🔬</span>
+                Stellest AI
+            </a>
+            <div class="nav-menu">
+                <a href="#predict" class="nav-link">Predict</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="predict">Patient Prediction</button>
+                <button class="tab" data-tab="analytics">Analytics Dashboard</button>
+                <button class="tab" data-tab="model-info">Model Information</button>
+            </div>
+
+            <!-- Prediction Tab -->
+            <div id="predict" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Patient Information & Prediction</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="predictionForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="patient_name">Patient Name</label>
+                                    <input type="text" id="patient_name" name="patient_name" class="form-control" placeholder="Enter patient name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="age">Age (years)</label>
+                                    <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" min="4" max="25" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="age_myopia_diagnosis">Age at Myopia Diagnosis</label>
+                                    <input type="number" id="age_myopia_diagnosis" name="age_myopia_diagnosis" class="form-control" placeholder="Age diagnosed" min="2" max="20" step="0.1" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="gender">Gender</label>
+                                    <select id="gender" name="gender" class="form-control" required>
+                                        <option value="">Select</option>
+                                        <option value="1">Male</option>
+                                        <option value="2">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty div for grid alignment -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty div for grid alignment -->
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="family_history_myopia">Family History of Myopia</label>
+                                    <select id="family_history_myopia" name="family_history_myopia" class="form-control" required>
+                                        <option value="">Select</option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="outdoor_time">Outdoor Time (hours/day)</label>
+                                    <input type="number" id="outdoor_time" name="outdoor_time" class="form-control" placeholder="Hours outdoors" min="0" max="12" step="0.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="screen_time">Screen Time (hours/day)</label>
+                                    <input type="number" id="screen_time" name="screen_time" class="form-control" placeholder="Hours on screens" min="0" max="16" step="0.5" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="previous_myopia_control">Previous Myopia Control</label>
+                                    <select id="previous_myopia_control" name="previous_myopia_control" class="form-control" required>
+                                        <option value="">Select</option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="stellest_wearing_time">Stellest Wearing Time (hours/day)</label>
+                                    <input type="number" id="stellest_wearing_time" name="stellest_wearing_time" class="form-control" placeholder="Hours wearing lens" min="8" max="18" step="0.5" required>
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty div for grid alignment -->
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="initial_power_re">Initial Power (RE)</label>
+                                    <input type="number" id="initial_power_re" name="initial_power_re" class="form-control" placeholder="Right eye power" step="0.25" max="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="initial_power_le">Initial Power (LE)</label>
+                                    <input type="number" id="initial_power_le" name="initial_power_le" class="form-control" placeholder="Left eye power" step="0.25" max="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="initial_axial_length_re">Initial Axial Length (RE)</label>
+                                    <input type="number" id="initial_axial_length_re" name="initial_axial_length_re" class="form-control" placeholder="Right eye AL" step="0.01" min="20" max="30" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="initial_axial_length_le">Initial Axial Length (LE)</label>
+                                    <input type="number" id="initial_axial_length_le" name="initial_axial_length_le" class="form-control" placeholder="Left eye AL" step="0.01" min="20" max="30" required>
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty div for grid alignment -->
+                                </div>
+                                <div class="form-group">
+                                    <!-- Empty div for grid alignment -->
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" id="predictBtn">
+                                    <span>🔮</span>
+                                    Predict Treatment Effectiveness
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Results -->
+                        <div id="results" class="content-hidden" style="display: none;">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Analytics Dashboard</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="analyticsContent">
+                            <p>Click "Predict Treatment Effectiveness" to see detailed analytics and insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Information Tab -->
+            <div id="model-info" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">AI Model Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="modelInfoContent">
+                            <p>Loading model information...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">Stellest Lens AI Predictor</div>
+                    <p class="footer-description">
+                        Advanced AI platform for predicting myopia treatment effectiveness using machine learning and clinical data analysis.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://gokulakrishnan.dev" class="footer-link" target="_blank" rel="noopener">
+                        Developer Portfolio
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Myopia Research Platform. Developed by <a href="https://gokulakrishnan.dev" target="_blank" rel="noopener" style="color: var(--secondary-white); text-decoration: none;">Gokulakrishnan</a>. All rights reserved.</p>
+                <p><small>For research and clinical decision support purposes.</small></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/app.js" defer></script>
+</body>
+</html>

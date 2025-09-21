@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔬 Stellest AI - Myopia Prediction Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --accent-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --accent-color: #ffffff;
+            --accent-hover: #f0f0f0;
+            --border-color: #333333;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+        }
+
+        /* Form */
+        .form-container {
+            background: var(--secondary-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--accent-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: var(--gray-600);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-bg);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Results */
+        .results-container {
+            background: var(--secondary-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--secondary-bg);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .prediction-result {
+            text-align: center;
+            padding: 2rem;
+            background: var(--accent-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .prediction-result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .probability {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .probability.high {
+            color: var(--success-color);
+        }
+
+        .probability.medium {
+            color: var(--warning-color);
+        }
+
+        .probability.low {
+            color: var(--danger-color);
+        }
+
+        .confidence {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .confidence.high {
+            color: var(--success-color);
+        }
+
+        .confidence.medium {
+            color: var(--warning-color);
+        }
+
+        .confidence.low {
+            color: var(--danger-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--secondary-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 0 0 10px 10px;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .tab {
+                padding: 0.75rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .probability {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container,
+            .results-container {
+                padding: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .probability {
+                font-size: 2rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: #666666;
+                --text-secondary: #ffffff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">🔬 Stellest AI</div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#prediction">Prediction</a></li>
+                    <li><a href="#analytics">Analytics</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>AI-Powered Myopia Prediction</h1>
+                <p>Predicting Clinical Uptake of Therapeutic Lenses (Stellest Lens) in Myopia Progression using Artificial Intelligence</p>
+            </section>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="prediction">🔮 Prediction</button>
+                <button class="tab" data-tab="analytics">📊 Analytics</button>
+            </div>
+
+            <!-- Prediction Tab -->
+            <div id="predictionTab" class="tab-content">
+                <div class="form-container">
+                    <h2>Patient Information</h2>
+                    <form id="predictionForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="patient_name">Patient Name *</label>
+                                <input type="text" id="patient_name" name="patient_name" required placeholder="Enter patient name">
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age (years) *</label>
+                                <input type="number" id="age" name="age" required min="4" max="25" step="0.1" placeholder="e.g., 12">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age_myopia_diagnosis">Age at Myopia Diagnosis *</label>
+                                <input type="number" id="age_myopia_diagnosis" name="age_myopia_diagnosis" required min="2" max="20" step="0.1" placeholder="e.g., 8">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender *</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="family_history_myopia">Family History of Myopia *</label>
+                                <select id="family_history_myopia" name="family_history_myopia" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="outdoor_time">Outdoor Time (hours/day) *</label>
+                                <input type="number" id="outdoor_time" name="outdoor_time" required min="0" max="12" step="0.5" placeholder="e.g., 2.0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="screen_time">Screen Time (hours/day) *</label>
+                                <input type="number" id="screen_time" name="screen_time" required min="0" max="16" step="0.5" placeholder="e.g., 4.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="previous_myopia_control">Previous Myopia Control *</label>
+                                <select id="previous_myopia_control" name="previous_myopia_control" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="stellest_wearing_time">Stellest Wearing Time (hours/day) *</label>
+                                <input type="number" id="stellest_wearing_time" name="stellest_wearing_time" required min="8" max="18" step="0.5" placeholder="e.g., 12.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="initial_power_re">Initial Power RE (diopters) *</label>
+                                <input type="number" id="initial_power_re" name="initial_power_re" required step="0.25" max="0" placeholder="e.g., -2.0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="initial_power_le">Initial Power LE (diopters) *</label>
+                                <input type="number" id="initial_power_le" name="initial_power_le" required step="0.25" max="0" placeholder="e.g., -2.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="initial_axial_length_re">Initial Axial Length RE (mm) *</label>
+                                <input type="number" id="initial_axial_length_re" name="initial_axial_length_re" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="initial_axial_length_le">Initial Axial Length LE (mm) *</label>
+                                <input type="number" id="initial_axial_length_le" name="initial_axial_length_le" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn" id="predictBtn">
+                            🔮 Predict Treatment Effectiveness
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Container -->
+                <div id="resultsContainer" class="results-container" style="display: none;">
+                    <h2>AI Prediction Results</h2>
+                    <div id="predictionResults"></div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content" style="display: none;">
+                <div class="results-container">
+                    <h2>Enhanced Analytics</h2>
+                    <div id="analyticsResults">
+                        <p>Submit a prediction to see detailed analytics and insights.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>🔬 Stellest AI - Myopia Prediction Platform</p>
+            <p>Developed by <a href="https://gokulakrishnan.dev" target="_blank">Gokulakrishnan</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
