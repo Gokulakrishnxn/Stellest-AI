@@ -92,7 +92,7 @@ class StellestAIApp {
         this.setLoadingState(true);
         
         try {
-            const response = await fetch('/api/predict', {
+            const response = await fetch('/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ class StellestAIApp {
 
             const result = await response.json();
             this.displayResults(result);
-            this.switchTab('analytics');
+            // Don't switch tabs automatically, keep user on prediction tab to see results
             
         } catch (error) {
             console.error('Error:', error);
@@ -193,11 +193,15 @@ class StellestAIApp {
     }
 
     displayResults(result) {
+        console.log('Displaying results:', result); // Debug log
         const resultsContainer = document.getElementById('resultsContainer');
         const predictionResults = document.getElementById('predictionResults');
         const analyticsResults = document.getElementById('analyticsResults');
 
-        if (!resultsContainer || !predictionResults) return;
+        if (!resultsContainer || !predictionResults) {
+            console.error('Results container or prediction results element not found');
+            return;
+        }
 
         // Display prediction results
         const ensemble_prediction = result.ensemble_prediction;
@@ -283,6 +287,7 @@ class StellestAIApp {
 
         // Show results container
         resultsContainer.style.display = 'block';
+        console.log('Results container displayed'); // Debug log
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
