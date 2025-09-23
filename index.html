@@ -364,10 +364,19 @@
         <div class="container">
             <p>🔬 Stellest AI - Myopia Prediction Platform</p>
             <p>Developed by <a href="https://gokulakrishnan.dev" target="_blank">Gokulakrishnan</a></p>
+            <div style="margin-top:8px">
+                <button id="signoutBtn" class="btn" style="max-width:200px;background:#222;color:#fff;border:1px solid #333">Sign out</button>
+                <a href="/" style="margin-left:12px;color:#fff">Home</a>
+            </div>
         </div>
     </footer>
 
     <script>
+        // Auth guard: redirect if no token
+        if (!localStorage.getItem('stellest_token')) {
+            window.location.replace('/signin');
+        }
+
         class StellestAIApp {
             constructor() {
                 this.init();
@@ -376,6 +385,14 @@
             init() {
                 this.setupEventListeners();
                 this.loadExampleData();
+                const signout = document.getElementById('signoutBtn');
+                if (signout) {
+                    signout.addEventListener('click', () => {
+                        localStorage.removeItem('stellest_token');
+                        localStorage.removeItem('stellest_user');
+                        window.location.replace('/signin');
+                    });
+                }
             }
 
             setupEventListeners() {
