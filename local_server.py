@@ -51,6 +51,14 @@ async def firebase_config():
             return PlainTextResponse(f.read(), media_type="application/javascript")
     return PlainTextResponse("window.FIREBASE_CONFIG=null;", media_type="application/javascript")
 
+@app.get("/supabase-config.js")
+async def supabase_config():
+    path = os.path.join(BASE_DIR, "supabase-config.js")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return PlainTextResponse(f.read(), media_type="application/javascript")
+    return PlainTextResponse("window.SUPABASE_CONFIG=null;", media_type="application/javascript")
+
 # Mount API apps under /api/* like Vercel
 app.mount("/api/predict", predict_app)
 app.mount("/api/health", health_app)

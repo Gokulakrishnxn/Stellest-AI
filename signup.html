@@ -56,8 +56,9 @@
         </form>
     </div>
 
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // If already signed in, go home
         if (localStorage.getItem('stellest_token')) {
             window.location.replace('/');
         }
@@ -66,7 +67,13 @@
         const btn = document.getElementById('signupBtn');
         const err = document.getElementById('error');
 
-        form.addEventListener('submit', (e) => {
+        const supabaseConfig = window.SUPABASE_CONFIG;
+        let supabaseClient = null;
+        if (supabaseConfig && window.supabase) {
+            supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+        }
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
             err.style.display = 'none';
             btn.disabled = true; btn.textContent = 'Creating...';
@@ -82,10 +89,30 @@
                 return;
             }
 
-            const token = 'tok_' + Math.random().toString(36).slice(2);
-            localStorage.setItem('stellest_token', token);
-            localStorage.setItem('stellest_user', JSON.stringify({ firstName, lastName, email }));
-            window.location.replace('/');
+            try {
+                if (!supabaseClient) throw new Error('Supabase not configured');
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email, password,
+                    options: {
+                        data: { firstName, lastName }
+                    }
+                });
+                if (error) throw error;
+                // Supabase may require email confirmation; handle both cases
+                if (data.session && data.session.access_token) {
+                    localStorage.setItem('stellest_token', data.session.access_token);
+                    localStorage.setItem('stellest_user', JSON.stringify({ firstName, lastName, email, provider: 'password' }));
+                    window.location.replace('/');
+                } else {
+                    alert('Check your email to confirm your account, then sign in.');
+                    window.location.replace('/signin');
+                }
+            } catch (e) {
+                console.error(e);
+                err.textContent = e.message || 'Sign-up failed';
+                err.style.display = 'block';
+                btn.disabled = false; btn.textContent = 'Create account';
+            }
         });
     </script>
 </body>

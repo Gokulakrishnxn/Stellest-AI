@@ -372,9 +372,35 @@
     </footer>
 
     <script>
-        // Auth guard: redirect if no token
-        if (!localStorage.getItem('stellest_token')) {
-            window.location.replace('/signin');
+        // Auth guard: redirect if no token (prefer Supabase if available)
+        async function ensureAuth() {
+            try {
+                const supaCfg = window.SUPABASE_CONFIG;
+                if (supaCfg && window.supabase) {
+                    const supa = window.supabase.createClient(supaCfg.url, supaCfg.anonKey);
+                    const { data } = await supa.auth.getSession();
+                    if (!data || !data.session) {
+                        // Fallback to localStorage
+                        if (!localStorage.getItem('stellest_token')) {
+                            window.location.replace('/signin');
+                            return false;
+                        }
+                    } else {
+                        // cache token locally for consistency
+                        localStorage.setItem('stellest_token', data.session.access_token);
+                    }
+                } else if (!localStorage.getItem('stellest_token')) {
+                    window.location.replace('/signin');
+                    return false;
+                }
+                return true;
+            } catch (e) {
+                if (!localStorage.getItem('stellest_token')) {
+                    window.location.replace('/signin');
+                    return false;
+                }
+                return true;
+            }
         }
 
         class StellestAIApp {
@@ -382,12 +408,21 @@
                 this.init();
             }
 
-            init() {
+            async init() {
+                const ok = await ensureAuth();
+                if (!ok) return;
                 this.setupEventListeners();
                 this.loadExampleData();
                 const signout = document.getElementById('signoutBtn');
                 if (signout) {
-                    signout.addEventListener('click', () => {
+                    signout.addEventListener('click', async () => {
+                        try {
+                            const supaCfg = window.SUPABASE_CONFIG;
+                            if (supaCfg && window.supabase) {
+                                const supa = window.supabase.createClient(supaCfg.url, supaCfg.anonKey);
+                                await supa.auth.signOut();
+                            }
+                        } catch {}
                         localStorage.removeItem('stellest_token');
                         localStorage.removeItem('stellest_user');
                         window.location.replace('/signin');
@@ -639,5 +674,7 @@
             new StellestAIApp();
         });
     </script>
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
