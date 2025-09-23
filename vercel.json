@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "functions": {
+    "api/predict.py": {
+      "runtime": "python3.9"
+    },
+    "api/health.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/predict",
+      "dest": "/api/predict.py"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/api/health.py"
+    },
+    {
+      "src": "/predict",
+      "dest": "/api/predict.py"
+    },
+    {
+      "src": "/health",
+      "dest": "/api/health.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
