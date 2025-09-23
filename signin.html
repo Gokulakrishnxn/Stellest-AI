@@ -21,6 +21,11 @@
         a{color:var(--accent);text-decoration:none}
         .error{color:#ff7272;margin-top:12px;display:none}
         .logo{font-weight:800;margin-bottom:16px}
+        .or{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted)}
+        .or span{flex:0 0 auto}
+        .or .line{height:1px;background:var(--border);flex:1}
+        .gbtn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#111;border:1px solid #444;border-radius:10px;padding:12px 16px;width:100%;font-weight:700;cursor:pointer}
+        .gbtn img{width:20px;height:20px}
     </style>
 </head>
 <body>
@@ -38,6 +43,11 @@
                 <input id="password" name="password" type="password" required placeholder="••••••••" />
             </div>
             <button class="btn" id="signinBtn" type="submit">Sign in</button>
+            <div class="or"><div class="line"></div><span>or</span><div class="line"></div></div>
+            <button type="button" id="googleBtn" class="gbtn">
+                <img alt="Google" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" />
+                Continue with Google
+            </button>
             <div class="row">
                 <span style="color:var(--muted);font-size:.95rem">No account?</span>
                 <a href="/signup">Create one</a>
@@ -55,6 +65,7 @@
         const form = document.getElementById('signinForm');
         const btn = document.getElementById('signinBtn');
         const err = document.getElementById('error');
+        const gbtn = document.getElementById('googleBtn');
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -64,7 +75,6 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            // Demo validation: accept any non-empty; for real apps, call backend
             if (!email || !password) {
                 err.textContent = 'Enter email and password';
                 err.style.display = 'block';
@@ -72,12 +82,52 @@
                 return;
             }
 
-            // Issue a simple token and store profile
             const token = 'tok_' + Math.random().toString(36).slice(2);
             localStorage.setItem('stellest_token', token);
-            localStorage.setItem('stellest_user', JSON.stringify({ email }));
+            localStorage.setItem('stellest_user', JSON.stringify({ email, provider: 'password' }));
             window.location.replace('/');
         });
+
+        // Google Sign-In with Firebase
+        gbtn.addEventListener('click', async () => {
+            err.style.display = 'none';
+            gbtn.disabled = true; gbtn.textContent = 'Connecting to Google...';
+            try {
+                if (!window.FIREBASE_CONFIG) {
+                    err.textContent = 'Google Sign-In not configured. Add your Firebase config.';
+                    err.style.display = 'block';
+                    return;
+                }
+                if (!window.firebase) {
+                    err.textContent = 'Firebase SDK not loaded.';
+                    err.style.display = 'block';
+                    return;
+                }
+                const app = firebase.initializeApp(window.FIREBASE_CONFIG);
+                const auth = firebase.auth();
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                const cred = await result.user.getIdToken();
+                const profile = {
+                    email: result.user.email,
+                    name: result.user.displayName,
+                    photo: result.user.photoURL,
+                    provider: 'google'
+                };
+                localStorage.setItem('stellest_token', cred);
+                localStorage.setItem('stellest_user', JSON.stringify(profile));
+                window.location.replace('/');
+            } catch (e) {
+                console.error(e);
+                err.textContent = 'Google sign-in failed. ' + (e && e.message ? e.message : '');
+                err.style.display = 'block';
+            } finally {
+                gbtn.disabled = false; gbtn.textContent = 'Continue with Google';
+            }
+        });
     </script>
+    <script src="/firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </body>
 </html>

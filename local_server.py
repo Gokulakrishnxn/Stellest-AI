@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 import os
 
 # Import sub-apps
@@ -42,6 +42,14 @@ async def signup():
         with open(page, "r", encoding="utf-8") as f:
             return f.read()
     return HTMLResponse("<h1>signup.html not found</h1>")
+
+@app.get("/firebase-config.js")
+async def firebase_config():
+    path = os.path.join(BASE_DIR, "firebase-config.js")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return PlainTextResponse(f.read(), media_type="application/javascript")
+    return PlainTextResponse("window.FIREBASE_CONFIG=null;", media_type="application/javascript")
 
 # Mount API apps under /api/* like Vercel
 app.mount("/api/predict", predict_app)
