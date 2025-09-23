@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellest AI — Home</title>
+    <style>
+        :root{--bg:#000;--panel:#0d0d0d;--text:#fff;--muted:#bbb;--border:#222;--accent:#fff}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        .header{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.7);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border)}
+        .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+        .logo{font-weight:800}
+        .links a{color:#fff;text-decoration:none;margin-left:14px}
+        .btn{display:inline-block;background:#fff;color:#000;border:none;border-radius:10px;padding:10px 16px;font-weight:700;text-decoration:none}
+        .hero{padding:88px 0 48px;background:radial-gradient(1000px 500px at 20% -10%,#1a1a1a 10%,transparent), radial-gradient(800px 400px at 100% 10%,#141414 10%,transparent)}
+        .hero h1{font-size:40px;line-height:1.1;margin-bottom:12px}
+        .hero p{color:var(--muted);font-size:18px;max-width:720px}
+        .cta{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding:32px 0}
+        .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+        .card h3{margin-bottom:8px}
+        .footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--muted)}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container nav">
+            <div class="logo">🔬 Stellest AI</div>
+            <div class="links">
+                <a href="/">Home</a>
+                <a href="/app">Start Prediction</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/signin">Sign in</a>
+                <a href="/signup">Sign up</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Predicting Clinical Uptake for Stellest Lens</h1>
+                <p>AI-powered insights to guide myopia control decisions. Enter patient details, get a probability, see the risk profile, and view population comparisons in a modern dashboard.</p>
+                <div class="cta">
+                    <a class="btn" href="/app">🔮 Start Prediction</a>
+                    <a class="btn" href="/dashboard" style="background:#1f1f1f;color:#fff;border:1px solid #333">📊 View Dashboard</a>
+                    <a class="btn" href="/signin" style="background:#1f1f1f;color:#fff;border:1px solid #333">🔐 Sign in</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="grid">
+                <div class="card">
+                    <h3>Clinical Recommendation</h3>
+                    <p>Clear guidance generated alongside each prediction: whether to recommend Stellest lenses, monitor closely, or consider alternatives.</p>
+                </div>
+                <div class="card">
+                    <h3>Risk Factors</h3>
+                    <p>High, medium, and protective factors identified from patient inputs such as age, axial length, outdoor time, and screen time.</p>
+                </div>
+                <div class="card">
+                    <h3>Population Comparison</h3>
+                    <p>Benchmark each patient’s probability against the cohort mean and percentile to contextualize outcomes.</p>
+                </div>
+                <div class="card">
+                    <h3>Secure & Fast</h3>
+                    <p>Deployed on Vercel with Supabase authentication. Lightweight API for reliable predictions.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">© 2025 Stellest AI — Developed by <a href="https://gokulakrishnan.dev" target="_blank" style="color:#fff">Gokulakrishnan</a></div>
+    </footer>
+</body>
+</html>

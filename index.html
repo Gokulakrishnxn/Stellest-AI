@@ -185,32 +185,60 @@
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
             margin-top: 2rem;
+            align-items: stretch;
         }
 
         .card {
-            background: var(--accent-bg);
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-bg) 0%, #1f1f1f 100%);
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
 
         .card-header {
-            background: var(--secondary-bg);
-            padding: 1rem;
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, #0a0a0a 100%);
+            padding: 1.25rem;
             border-bottom: 1px solid var(--border-color);
         }
 
         .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title::before {
+            content: "📊";
+            font-size: 1.1rem;
         }
 
         .card-body {
-            padding: 1rem;
+            padding: 1.25rem;
+            flex: 1;
+            background: rgba(26, 26, 26, 0.5);
+        }
+
+        .card-body canvas { 
+            width: 100% !important; 
+            height: 300px !important; 
+            display: block; 
+            border-radius: 8px;
         }
 
         .footer {
@@ -231,6 +259,185 @@
             text-decoration: underline;
         }
 
+        /* Analytics summary cards styling */
+        .analytics-summary {
+            margin-bottom: 2rem;
+        }
+
+        .analytics-summary .results-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .analytics-summary .card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #333;
+        }
+
+        .analytics-summary .card-body {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .analytics-summary .card-body div {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4e9eff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Treatment options styling */
+        .treatment-section {
+            margin: 16px 0;
+            padding: 16px;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .treatment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .treatment-card {
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            transition: all 0.2s ease;
+        }
+
+        .treatment-card:hover {
+            border-color: #4e9eff;
+            box-shadow: 0 4px 15px rgba(78, 158, 255, 0.1);
+        }
+
+        /* Enhanced prediction result styling */
+        .prediction-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 2px solid #333;
+        }
+
+        .effectiveness-score {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, #4e9eff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .effectiveness-score.high { 
+            background: linear-gradient(135deg, #28a745, #20c997);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .effectiveness-score.medium { 
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .effectiveness-score.low { 
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .prediction-summary {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        /* Clinical data styling */
+        .clinical-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .clinical-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-value {
+            font-weight: 700;
+            color: #4e9eff;
+        }
+
+        .metric-improvement {
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        .advice-item {
+            margin: 8px 0;
+            padding: 12px;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            border-radius: 8px;
+            border-left: 4px solid #4e9eff;
+        }
+
+        .advice-item.critical-priority {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+        }
+
+        .advice-item.high-priority {
+            border-left-color: #fd7e14;
+            background: linear-gradient(135deg, rgba(253, 126, 20, 0.1), rgba(253, 126, 20, 0.05));
+        }
+
+        .advice-item.medium-priority {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+        }
+
+        .monitoring-schedule {
+            display: grid;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .schedule-item {
+            padding: 10px;
+            background: #0a0a0a;
+            border-radius: 6px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-timepoint {
+            font-weight: 700;
+            color: #4e9eff;
+        }
+
+        .schedule-tests {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -242,17 +449,34 @@
             .probability {
                 font-size: 2.5rem;
             }
+            .card-body canvas { height: 250px !important; }
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .analytics-summary .card-body div {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo">🔬 Stellest AI</div>
-            <div style="float:right;margin-top:-24px">
-                <a href="/" style="color:#fff;margin-right:12px">Home</a>
-                <a href="/dashboard" style="color:#fff">Dashboard</a>
-            </div>
+            <nav style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div class="logo">🔬 Stellest AI</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <div style="position:relative">
+                        <button id="avatarBtn" aria-label="Profile" style="width:36px;height:36px;border-radius:50%;border:1px solid #333;background:#1a1a1a;color:#fff;font-weight:700;cursor:pointer;overflow:hidden"></button>
+                        <div id="profileMenu" style="display:none;position:absolute;right:0;top:44px;background:#111;border:1px solid #333;border-radius:10px;min-width:200px;z-index:50">
+                            <div id="profileInfo" style="padding:12px;border-bottom:1px solid #222;color:#ccc"></div>
+                            <a href="/signin" id="profileSignout" style="display:block;padding:10px 12px;color:#fff;text-decoration:none">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -313,41 +537,80 @@
                             <input type="number" id="screen_time" name="screen_time" required min="0" max="16" step="0.5" placeholder="e.g., 4.0">
                         </div>
                         <div class="form-group">
-                            <label for="previous_myopia_control">Previous Myopia Control *</label>
+                            <label for="previous_myopia_control">Previous Myopia Control * (drops or VT)</label>
                             <select id="previous_myopia_control" name="previous_myopia_control" required>
                                 <option value="">Select</option>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
+                                <option value="0">None</option>
+                                <option value="1">Atropine eye drops</option>
+                                <option value="2">Vision Therapy (VT)</option>
+                                <option value="3">Both drops and VT</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="stellest_wearing_time">Stellest Wearing Time (hours/day) *</label>
-                            <input type="number" id="stellest_wearing_time" name="stellest_wearing_time" required min="8" max="18" step="0.5" placeholder="e.g., 12.0">
-                        </div>
-                        <div class="form-group">
-                            <label for="initial_power_re">Initial Power RE (diopters) *</label>
-                            <input type="number" id="initial_power_re" name="initial_power_re" required step="0.25" max="0" placeholder="e.g., -2.0">
+                            <label for="right_eye_spherical">Right Eye Spherical (D) *</label>
+                            <input type="number" id="right_eye_spherical" name="right_eye_spherical" required step="0.25" max="0" placeholder="e.g., -2.0">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="initial_power_le">Initial Power LE (diopters) *</label>
-                            <input type="number" id="initial_power_le" name="initial_power_le" required step="0.25" max="0" placeholder="e.g., -2.0">
+                            <label for="right_eye_cylinder">Right Eye Cylinder (D) *</label>
+                            <input type="number" id="right_eye_cylinder" name="right_eye_cylinder" required step="0.25" max="0" placeholder="e.g., -0.5">
                         </div>
                         <div class="form-group">
-                            <label for="initial_axial_length_re">Initial Axial Length RE (mm) *</label>
-                            <input type="number" id="initial_axial_length_re" name="initial_axial_length_re" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                            <label for="left_eye_spherical">Left Eye Spherical (D) *</label>
+                            <input type="number" id="left_eye_spherical" name="left_eye_spherical" required step="0.25" max="0" placeholder="e.g., -2.0">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="initial_axial_length_le">Initial Axial Length LE (mm) *</label>
-                            <input type="number" id="initial_axial_length_le" name="initial_axial_length_le" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                            <label for="left_eye_cylinder">Left Eye Cylinder (D) *</label>
+                            <input type="number" id="left_eye_cylinder" name="left_eye_cylinder" required step="0.25" max="0" placeholder="e.g., -0.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="right_eye_axial_length">Right Eye Axial Length (mm) *</label>
+                            <input type="number" id="right_eye_axial_length" name="right_eye_axial_length" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="left_eye_axial_length">Left Eye Axial Length (mm) *</label>
+                            <input type="number" id="left_eye_axial_length" name="left_eye_axial_length" required step="0.01" min="20" max="30" placeholder="e.g., 23.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="new_stellest_lenses">New Stellest Lenses *</label>
+                            <select id="new_stellest_lenses" name="new_stellest_lenses" required>
+                                <option value="">Select</option>
+                                <option value="0">No (Current user)</option>
+                                <option value="1">Yes (Considering new)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="keratometry_k1_re">Keratometry K1 OD (D) *</label>
+                            <input type="number" id="keratometry_k1_re" name="keratometry_k1_re" required min="35" max="50" step="0.01" placeholder="e.g., 43.25">
+                        </div>
+                        <div class="form-group">
+                            <label for="keratometry_k2_re">Keratometry K2 OD (D) *</label>
+                            <input type="number" id="keratometry_k2_re" name="keratometry_k2_re" required min="35" max="50" step="0.01" placeholder="e.g., 44.50">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="keratometry_k1_le">Keratometry K1 OS (D) *</label>
+                            <input type="number" id="keratometry_k1_le" name="keratometry_k1_le" required min="35" max="50" step="0.01" placeholder="e.g., 43.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="keratometry_k2_le">Keratometry K2 OS (D) *</label>
+                            <input type="number" id="keratometry_k2_le" name="keratometry_k2_le" required min="35" max="50" step="0.01" placeholder="e.g., 44.25">
                         </div>
                     </div>
 
@@ -358,8 +621,77 @@
             </div>
 
             <div id="resultsContainer" class="results-container">
-                <h2>AI Prediction Results</h2>
+                <h2>🎯 Stellest Lens Effectiveness Analysis</h2>
                 <div id="predictionResults"></div>
+            </div>
+
+            <div id="analyticsContainer" class="results-container" style="display:none">
+                <h2>Analytics</h2>
+                <div class="analytics-summary">
+                    <div class="results-grid" id="analyticsSummary">
+                        <div class="card">
+                            <div class="card-header"><h4 class="card-title">📈 Total Predictions</h4></div>
+                            <div class="card-body"><div id="metricTotal">–</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h4 class="card-title">🎯 Avg Probability</h4></div>
+                            <div class="card-body"><div id="metricAvgProb">–</div></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h4 class="card-title">✅ Success Rate</h4></div>
+                            <div class="card-body"><div id="metricPositive">–</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="results-grid">
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Overall Probability</h4></div>
+                        <div class="card-body"><canvas id="probChart" height="220"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Individual Models</h4></div>
+                        <div class="card-body"><canvas id="modelsChart" height="220"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Risk Profile</h4></div>
+                        <div class="card-body"><canvas id="riskChart" height="220"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Population Comparison</h4></div>
+                        <div class="card-body"><canvas id="popChart" height="220"></canvas></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Clinical Recommendation & Risk Factors</h4></div>
+                        <div class="card-body" id="clinicalPanel"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h4 class="card-title">Trend (Avg Probability by Day)</h4></div>
+                        <div class="card-body"><canvas id="trendChart" height="220"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="card" id="historyCard" style="margin-top:16px;display:none">
+                    <div class="card-header"><h4 class="card-title">Recent Predictions</h4></div>
+                    <div class="card-body">
+                        <div style="margin-bottom:12px">
+                            <button class="btn" id="exportBtn">Export CSV</button>
+                        </div>
+                        <div style="overflow:auto">
+                            <table id="historyTable" style="width:100%;border-collapse:collapse">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Time</th>
+                                        <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Patient</th>
+                                        <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Probability</th>
+                                        <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Confidence</th>
+                                        <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -367,11 +699,7 @@
     <footer class="footer">
         <div class="container">
             <p>🔬 Stellest AI - Myopia Prediction Platform</p>
-            <p>Developed by <a href="https://gokulakrishnan.dev" target="_blank">Gokulakrishnan</a></p>
-            <div style="margin-top:8px">
-                <button id="signoutBtn" class="btn" style="max-width:200px;background:#222;color:#fff;border:1px solid #333">Sign out</button>
-                <a href="/" style="margin-left:12px;color:#fff">Home</a>
-            </div>
+            <p>Developed by: <a href="https://gokulakrishnan.dev" target="_blank">Gokulakrishnan</a> &nbsp;|&nbsp; Nandh Kishore</p>
         </div>
     </footer>
 
@@ -455,7 +783,7 @@
                     // Try Vercel API first, fallback to local
                     let response;
                     try {
-                        response = await fetch('/api/predict', {
+                        response = await fetch('/api/predict/', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(formData)
@@ -476,7 +804,32 @@
                     const result = await response.json();
                     // Save for dashboard
                     try { localStorage.setItem('last_prediction', JSON.stringify(result)); } catch {}
-                    this.displayResults(result);
+                    // Save to Supabase (optional)
+                    try {
+                        if (window.SUPABASE_CONFIG && window.supabase) {
+                            const supa = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                            const userMeta = JSON.parse(localStorage.getItem('stellest_user') || '{}');
+                            const record = {
+                                user_email: userMeta.email || null,
+                                patient_name: result.patient_name || null,
+                                probability: (result.progression_predictions && result.progression_predictions.effectiveness_percentage / 100) || null,
+                                confidence: 'High', // Default confidence for new structure
+                                will_benefit: (result.progression_predictions && result.progression_predictions.effectiveness_percentage > 50) || null,
+                                recommendation: result.recommendation || null,
+                                risk_high_count: null, // Not used in new structure
+                                risk_medium_count: null, // Not used in new structure
+                                risk_protective_count: null, // Not used in new structure
+                                risk_json: JSON.stringify(result.clinical_summary || {}),
+                                created_at: new Date().toISOString()
+                            };
+                            await supa.from('predictions').insert(record);
+                        }
+                    } catch (e) {
+                        console.warn('Supabase save skipped:', e && e.message ? e.message : e);
+                    }
+                    this.displayPredictionResult(result);
+                    // After displaying, render analytics
+                    try { this.renderAnalytics(result); } catch (e) { console.warn('Analytics error', e); }
                     
                 } catch (error) {
                     console.error('Error:', error);
@@ -494,8 +847,9 @@
                 const fields = [
                     'patient_name', 'age', 'age_myopia_diagnosis', 'gender', 'family_history_myopia',
                     'outdoor_time', 'screen_time', 'previous_myopia_control',
-                    'initial_power_re', 'initial_power_le', 'initial_axial_length_re', 'initial_axial_length_le',
-                    'stellest_wearing_time'
+                    'right_eye_spherical', 'right_eye_cylinder', 'left_eye_spherical', 'left_eye_cylinder',
+                    'right_eye_axial_length', 'left_eye_axial_length', 'keratometry_k1_re', 'keratometry_k2_re',
+                    'keratometry_k1_le', 'keratometry_k2_le', 'new_stellest_lenses'
                 ];
 
                 fields.forEach(field => {
@@ -516,8 +870,9 @@
                 const requiredFields = [
                     'patient_name', 'age', 'age_myopia_diagnosis', 'gender', 'family_history_myopia',
                     'outdoor_time', 'screen_time', 'previous_myopia_control',
-                    'initial_power_re', 'initial_power_le', 'initial_axial_length_re', 'initial_axial_length_le',
-                    'stellest_wearing_time'
+                    'right_eye_spherical', 'right_eye_cylinder', 'left_eye_spherical', 'left_eye_cylinder',
+                    'right_eye_axial_length', 'left_eye_axial_length', 'keratometry_k1_re', 'keratometry_k2_re',
+                    'keratometry_k1_le', 'keratometry_k2_le', 'new_stellest_lenses'
                 ];
 
                 for (const field of requiredFields) {
@@ -625,8 +980,514 @@
                 `;
 
                 resultsContainer.style.display = 'block';
-                console.log('Results container displayed');
+                // Show analytics container
+                const analyticsContainer = document.getElementById('analyticsContainer');
+                if (analyticsContainer) analyticsContainer.style.display = 'block';
                 resultsContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            displayPredictionResult(result) {
+                console.log('Displaying comprehensive prediction result:', result);
+                const resultsContainer = document.getElementById('predictionResults');
+                if (!resultsContainer) {
+                    console.error('Results container not found');
+                    return;
+                }
+
+                const patientName = result.patient_name || 'Patient';
+                const effectiveness = result.progression_predictions?.effectiveness_percentage || 0;
+                const currentStatus = result.current_status || {};
+                const oneYear = result.progression_predictions?.['1_year_outcomes'] || {};
+                const twoYear = result.progression_predictions?.['2_year_outcomes'] || {};
+                const stellestBenefits = result.stellest_benefits || {};
+                const personalizedAdvice = result.personalized_advice || {};
+
+                // Determine effectiveness level for styling
+                const effectivenessLevel = effectiveness > 70 ? 'high' : effectiveness > 50 ? 'medium' : 'low';
+
+                resultsContainer.innerHTML = `
+                    <div class="prediction-header">
+                        <h2 style="margin: 0 0 1rem 0; color: #fff;">Clinical Prediction for ${patientName}</h2>
+                        <div class="effectiveness-score ${effectivenessLevel}">${effectiveness}%</div>
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #4e9eff; margin-bottom: 1rem;">
+                            Expected Stellest Effectiveness
+                        </div>
+                        <div class="prediction-summary">
+                            ${result.recommendation || 'Comprehensive treatment plan generated based on clinical data.'}
+                        </div>
+                    </div>
+
+                    <div class="results-grid">
+                        <!-- Current Clinical Status -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">📊 Current Clinical Status</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Spherical Equivalent OD</span>
+                                    <span class="metric-value">${currentStatus.spherical_equivalent_od || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Spherical Equivalent OS</span>
+                                    <span class="metric-value">${currentStatus.spherical_equivalent_os || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Average Axial Length</span>
+                                    <span class="metric-value">${currentStatus.average_axial_length || 'N/A'}mm</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Average Keratometry</span>
+                                    <span class="metric-value">${currentStatus.average_keratometry || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Myopia Severity</span>
+                                    <span class="metric-value" style="color: ${result.clinical_summary?.myopia_severity === 'High' ? '#dc3545' : result.clinical_summary?.myopia_severity === 'Moderate' ? '#ffc107' : '#28a745'}">${result.clinical_summary?.myopia_severity || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1-Year Projection -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">📈 1-Year Projection</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Projected Spherical Equivalent</span>
+                                    <span class="metric-value">${oneYear.average_spherical_equivalent || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Projected Axial Length</span>
+                                    <span class="metric-value">${oneYear.average_axial_length || 'N/A'}mm</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">SE Progression Prevented</span>
+                                    <span class="metric-improvement">+${oneYear.progression_prevented?.spherical_equivalent || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">AL Growth Prevented</span>
+                                    <span class="metric-improvement">+${oneYear.progression_prevented?.axial_length || 'N/A'}mm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2-Year Projection -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">📊 2-Year Projection</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Projected Spherical Equivalent</span>
+                                    <span class="metric-value">${twoYear.average_spherical_equivalent || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Projected Axial Length</span>
+                                    <span class="metric-value">${twoYear.average_axial_length || 'N/A'}mm</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Total SE Progression Prevented</span>
+                                    <span class="metric-improvement">+${twoYear.progression_prevented?.spherical_equivalent || 'N/A'}D</span>
+                                </div>
+                                <div class="clinical-metric">
+                                    <span class="metric-label">Total AL Growth Prevented</span>
+                                    <span class="metric-improvement">+${twoYear.progression_prevented?.axial_length || 'N/A'}mm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stellest Benefits -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">💡 Treatment Benefits</h4>
+                            </div>
+                            <div class="card-body">
+                                <div style="margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 8px; border: 1px solid #333;">
+                                    <div style="font-weight: 700; color: #4e9eff; margin-bottom: 8px;">Expected Effectiveness</div>
+                                    <div style="font-size: 1.5rem; font-weight: 800; color: #28a745;">${stellestBenefits.expected_effectiveness || 'N/A'}</div>
+                                </div>
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #4e9eff;">Axial Length Control:</strong><br/>
+                                    <span style="color: #28a745;">${stellestBenefits.axial_length_control || 'N/A'}</span>
+                                </div>
+                                <div style="margin-bottom: 12px;">
+                                    <strong style="color: #4e9eff;">Myopia Control:</strong><br/>
+                                    <span style="color: #28a745;">${stellestBenefits.myopia_control || 'N/A'}</span>
+                                </div>
+                                <div style="padding: 12px; background: #0f0f0f; border-radius: 6px; font-size: 0.9rem; border-left: 4px solid #28a745;">
+                                    <strong>Long-term Benefit:</strong><br/>
+                                    ${stellestBenefits.long_term_benefit || 'Reduced risk of myopia-related complications'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Lifestyle Recommendations -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">📋 Lifestyle Recommendations</h4>
+                            </div>
+                            <div class="card-body">
+                                ${personalizedAdvice.lifestyle_recommendations?.length ? 
+                                    personalizedAdvice.lifestyle_recommendations.map(rec => `
+                                        <div class="advice-item ${rec.priority === 'Critical' ? 'critical-priority' : rec.priority === 'High' ? 'high-priority' : rec.priority === 'Medium' ? 'medium-priority' : ''}">
+                                            <div style="font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 1.2rem;">${rec.icon || '📋'}</span>
+                                                <span>${rec.category}</span>
+                                                <span style="padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; background: ${rec.priority === 'Critical' ? '#dc3545' : rec.priority === 'High' ? '#fd7e14' : rec.priority === 'Medium' ? '#ffc107' : '#28a745'}; color: #fff;">
+                                                    ${rec.priority || 'Normal'}
+                                                </span>
+                                            </div>
+                                            ${rec.current ? `<div style="margin-bottom: 8px; font-size: 0.9rem; padding: 6px; background: #1a1a1a; border-radius: 4px;">
+                                                <strong style="color: #ffc107;">Current:</strong> ${rec.current} → <strong style="color: #28a745;">Target:</strong> ${rec.target}
+                                            </div>` : ''}
+                                            <div style="color: #ccc; font-size: 0.95rem; margin-bottom: 8px; line-height: 1.4;">${rec.advice}</div>
+                                            ${rec.tips?.length ? `
+                                                <div style="margin-top: 8px;">
+                                                    <strong style="color: #4e9eff; font-size: 0.9rem;">💡 Practical Tips:</strong>
+                                                    <ul style="margin: 4px 0 0 16px; color: #aaa; font-size: 0.85rem;">
+                                                        ${rec.tips.map(tip => `<li style="margin: 2px 0;">${tip}</li>`).join('')}
+                                                    </ul>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    `).join('') : 
+                                    '<div class="advice-item">No specific lifestyle modifications needed at this time.</div>'
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Treatment Guidelines -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">🎯 Treatment Guidelines</h4>
+                            </div>
+                            <div class="card-body">
+                                <!-- Treatment Goals -->
+                                ${personalizedAdvice.treatment_goals ? `
+                                    <div style="margin-bottom: 20px; padding: 12px; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 8px; border: 1px solid #333;">
+                                        <h5 style="color: #4e9eff; margin-bottom: 10px;">🎯 Treatment Goals</h5>
+                                        <div style="display: grid; gap: 6px;">
+                                            <div><strong style="color: #28a745;">Primary:</strong> ${personalizedAdvice.treatment_goals.primary}</div>
+                                            <div><strong style="color: #ffc107;">Secondary:</strong> ${personalizedAdvice.treatment_goals.secondary}</div>
+                                            <div><strong style="color: #4e9eff;">Long-term:</strong> ${personalizedAdvice.treatment_goals.long_term}</div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <!-- Enhanced Key Advice -->
+                                <div style="margin-bottom: 20px;">
+                                    <h5 style="color: #4e9eff; margin-bottom: 12px;">📋 Essential Guidelines</h5>
+                                    ${personalizedAdvice.key_advice?.length ? 
+                                        personalizedAdvice.key_advice.map(advice => `
+                                            <div style="margin-bottom: 12px; padding: 10px; background: #0f0f0f; border-radius: 6px; border-left: 4px solid ${advice.priority === 'Critical' ? '#dc3545' : advice.priority === 'Essential' ? '#fd7e14' : '#4e9eff'};">
+                                                <div style="font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                                    <span>${advice.category}</span>
+                                                    <span style="padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; background: ${advice.priority === 'Critical' ? '#dc3545' : advice.priority === 'Essential' ? '#fd7e14' : '#4e9eff'}; color: #fff;">
+                                                        ${advice.priority}
+                                                    </span>
+                                                </div>
+                                                <div style="color: #ccc; font-size: 0.9rem; margin-bottom: 6px;">${advice.advice}</div>
+                                                <div style="color: #aaa; font-size: 0.85rem; font-style: italic;">${advice.details}</div>
+                                            </div>
+                                        `).join('') : 
+                                        '<p style="color: #ccc;">Follow standard Stellest lens care guidelines.</p>'
+                                    }
+                                </div>
+                                
+                                <!-- Enhanced Monitoring Schedule -->
+                                <div style="margin-bottom: 20px;">
+                                    <h5 style="color: #4e9eff; margin-bottom: 12px;">📅 Monitoring Schedule</h5>
+                                    <div class="monitoring-schedule">
+                                        ${personalizedAdvice.monitoring_schedule?.length ? 
+                                            personalizedAdvice.monitoring_schedule.map(schedule => `
+                                                <div class="schedule-item" style="flex-direction: column; align-items: flex-start; padding: 12px;">
+                                                    <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 6px;">
+                                                        <span class="schedule-timepoint" style="font-size: 1rem;">${schedule.timepoint}</span>
+                                                        <span style="padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; background: ${schedule.priority === 'Critical' ? '#dc3545' : schedule.priority === 'Essential' ? '#fd7e14' : '#28a745'}; color: #fff;">
+                                                            ${schedule.priority}
+                                                        </span>
+                                                    </div>
+                                                    <div style="color: #aaa; font-size: 0.85rem; margin-bottom: 4px; font-style: italic;">${schedule.purpose}</div>
+                                                    <div class="schedule-tests" style="font-size: 0.9rem;">${schedule.tests.join(', ')}</div>
+                                                </div>
+                                            `).join('') : 
+                                            '<div class="schedule-item"><span>Follow standard monitoring protocol</span></div>'
+                                        }
+                                    </div>
+                                </div>
+                                
+                                <!-- Success Indicators -->
+                                ${personalizedAdvice.success_indicators?.length ? `
+                                    <div style="margin-bottom: 20px;">
+                                        <h5 style="color: #28a745; margin-bottom: 12px;">✅ Success Indicators</h5>
+                                        <div style="display: grid; gap: 8px;">
+                                            ${personalizedAdvice.success_indicators.map(indicator => `
+                                                <div style="padding: 8px; background: #0a0a0a; border-radius: 6px; border: 1px solid #28a745;">
+                                                    <div style="font-weight: 700; color: #28a745; margin-bottom: 4px;">${indicator.metric}</div>
+                                                    <div style="font-size: 0.9rem; margin-bottom: 4px;">
+                                                        <strong style="color: #ffc107;">Target:</strong> ${indicator.target} | 
+                                                        <strong style="color: #28a745;">Excellent:</strong> ${indicator.excellent}
+                                                    </div>
+                                                    <div style="font-size: 0.85rem; color: #aaa;">${indicator.importance}</div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <!-- Warning Signs -->
+                                ${personalizedAdvice.warning_signs?.length ? `
+                                    <div>
+                                        <h5 style="color: #dc3545; margin-bottom: 12px;">⚠️ Warning Signs</h5>
+                                        <div style="display: grid; gap: 8px;">
+                                            ${personalizedAdvice.warning_signs.map(warning => `
+                                                <div style="padding: 8px; background: #0a0a0a; border-radius: 6px; border: 1px solid #dc3545;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                                        <span style="font-weight: 700; color: #dc3545;">${warning.sign}</span>
+                                                        <span style="padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; background: ${warning.urgency === 'Critical' ? '#dc3545' : warning.urgency === 'High' ? '#fd7e14' : '#ffc107'}; color: #fff;">
+                                                            ${warning.urgency}
+                                                        </span>
+                                                    </div>
+                                                    <div style="font-size: 0.9rem; color: #ccc; margin-bottom: 4px;">${warning.description}</div>
+                                                    <div style="font-size: 0.85rem; color: #aaa; font-weight: 600;">Action: ${warning.action}</div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                resultsContainer.style.display = 'block';
+                document.getElementById('resultsContainer').style.display = 'block';
+                
+                // Show analytics container
+                const analyticsContainer = document.getElementById('analyticsContainer');
+                if (analyticsContainer) analyticsContainer.style.display = 'block';
+                
+                // Scroll to results
+                document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth' });
+
+                // Update analytics summary cards immediately
+                this.updateAnalyticsSummary(result);
+                
+                // Render analytics with the result
+                this.renderAnalytics(result);
+            }
+
+            updateAnalyticsSummary(result) {
+                // Update the summary cards with current prediction data
+                const metricTotal = document.getElementById('metricTotal');
+                const metricAvgProb = document.getElementById('metricAvgProb');
+                const metricPositive = document.getElementById('metricPositive');
+                
+                const effectiveness = result.progression_predictions?.effectiveness_percentage || 0;
+                const isPositive = effectiveness > 50;
+                
+                // Show current prediction as "1" prediction
+                if (metricTotal) metricTotal.textContent = '1';
+                if (metricAvgProb) metricAvgProb.textContent = `${effectiveness.toFixed(1)}%`;
+                if (metricPositive) metricPositive.textContent = isPositive ? '100.0%' : '0.0%';
+            }
+
+            renderAnalytics(result) {
+                // Charts: probChart, modelsChart, riskChart, popChart; clinicalPanel; history
+                const effectiveness = result.progression_predictions?.effectiveness_percentage || 0;
+                const prob = effectiveness / 100; // Convert percentage to decimal for charts
+                // Probability chart
+                const probCtx = document.getElementById('probChart');
+                if (probCtx && window.Chart) {
+                    new Chart(probCtx, {
+                        type: 'doughnut',
+                        data: { labels: ['Stellest Effectiveness','Remainder'], datasets: [{ data: [Math.round(prob*100), 100-Math.round(prob*100)], backgroundColor: ['#28a745','#222'] }] },
+                        options: { plugins:{legend:{labels:{color:'#fff'}}} }
+                    });
+                }
+                // Models chart
+                const models = result.individual_models || {};
+                const mLabels = Object.keys(models).map(m=>this.formatModelName(m));
+                const mValues = Object.values(models).map(v=>Math.max(0, Math.min(100, Math.round((v.probability||0)*100))));
+                const modelsCtx = document.getElementById('modelsChart');
+                if (modelsCtx && window.Chart) {
+                    new Chart(modelsCtx, { type:'bar', data:{ labels:mLabels, datasets:[{ label:'Probability %', data:mValues, backgroundColor:'#4e9eff' }] }, options:{ scales:{ x:{ ticks:{ color:'#fff' } }, y:{ ticks:{ color:'#fff' }, suggestedMax:100 } }, plugins:{ legend:{ labels:{ color:'#fff' } } } } });
+                }
+                // Risk chart - using clinical summary data
+                const clinicalFactors = result.clinical_summary?.clinical_factors || [];
+                const progressionRisk = result.clinical_summary?.progression_risk || 'Low';
+                const riskCtx = document.getElementById('riskChart');
+                if (riskCtx && window.Chart) {
+                    const riskValue = progressionRisk === 'High' ? 3 : progressionRisk === 'Moderate' ? 2 : 1;
+                    const protectiveValue = clinicalFactors.length;
+                    new Chart(riskCtx, { 
+                        type:'bar', 
+                        data:{ 
+                            labels:['Risk Assessment'], 
+                            datasets:[ 
+                                {label:'Progression Risk', data:[riskValue], backgroundColor:'#dc3545'}, 
+                                {label:'Protective Factors', data:[protectiveValue], backgroundColor:'#28a745'} 
+                            ] 
+                        }, 
+                        options:{ 
+                            plugins:{ legend:{ labels:{ color:'#fff' } } }, 
+                            scales:{ x:{ ticks:{ color:'#fff' } }, y:{ ticks:{ color:'#fff' }, suggestedMax:5 } } 
+                        } 
+                    });
+                }
+                // Population comparison
+                const popCtx = document.getElementById('popChart');
+                if (popCtx && window.Chart) {
+                    const mean = 0.57; // demo cohort mean
+                    new Chart(popCtx, { type:'bar', data:{ labels:['Cohort Mean','You'], datasets:[{ label:'Probability', data:[Math.round(mean*100), Math.round(prob*100)], backgroundColor:['#666','#4e9eff'] }] }, options:{ plugins:{ legend:{ labels:{ color:'#fff' } } }, scales:{ x:{ ticks:{ color:'#fff' } }, y:{ ticks:{ color:'#fff' }, suggestedMax:100 } } } });
+                    // Clinical panel
+                    const panel = document.getElementById('clinicalPanel');
+                    if (panel) {
+                        const percentile = Math.round(prob*100); // simple demo percentile
+                        const tx = result.treatments || {};
+                        const atropine = tx.atropine || {};
+                        const vt = tx.vision_therapy || {};
+                        const stellestBenefits = result.stellest_benefits || {};
+                        panel.innerHTML = `
+                            <div style="margin-bottom:12px">
+                                <div><strong>Population mean:</strong> ${(mean*100).toFixed(1)}%</div>
+                                <div><strong>Your percentile:</strong> ${percentile}th</div>
+                            </div>
+                            <div style="margin-bottom:12px"><strong>Recommendation:</strong><br/>${result.recommendation || ''}</div>
+                            ${tx ? `
+                            <div class="treatment-section">
+                                <h4 style="margin:0 0 12px 0; color:#4e9eff">💊 Treatment Options</h4>
+                                <div class="treatment-grid">
+                                    <div class="treatment-card">
+                                        <div style="font-weight:700;margin-bottom:8px;color:#fff;display:flex;align-items:center;gap:8px">
+                                            <span>💧</span> ${atropine.name || 'Low-dose Atropine'}
+                                        </div>
+                                        <div style="margin-bottom:8px">
+                                            <span style="padding:4px 8px;border-radius:8px;background:${atropine.recommended?'linear-gradient(135deg, #28a745, #20c997)':'#333'};color:${atropine.recommended?'#fff':'#aaa'};font-size:0.9rem;font-weight:600">${atropine.recommended?'✅ Recommended':(atropine.consider?'⚠️ Consider':'❌ Not indicated')}</span>
+                                        </div>
+                                        ${atropine.dose ? `<div style="margin:6px 0"><strong style="color:#4e9eff">Dose:</strong> ${atropine.dose}</div>`:''}
+                                        ${atropine.instructions ? `<div style="margin:6px 0"><strong style="color:#4e9eff">Usage:</strong> ${atropine.instructions}</div>`:''}
+                                        ${atropine.rationale ? `<div style="margin-top:8px;color:#bbb;font-size:0.9rem;line-height:1.4">${atropine.rationale}</div>`:''}
+                                    </div>
+                                    <div class="treatment-card">
+                                        <div style="font-weight:700;margin-bottom:8px;color:#fff;display:flex;align-items:center;gap:8px">
+                                            <span>👁️</span> ${vt.name || 'Vision Therapy'}
+                                        </div>
+                                        <div style="margin-bottom:8px">
+                                            <span style="padding:4px 8px;border-radius:8px;background:${vt.recommended?'linear-gradient(135deg, #28a745, #20c997)':'#333'};color:${vt.recommended?'#fff':'#aaa'};font-size:0.9rem;font-weight:600">${vt.recommended?'✅ Recommended':(vt.consider?'⚠️ Consider':'❌ Not indicated')}</span>
+                                        </div>
+                                        ${Array.isArray(vt.modules) && vt.modules.length ? `<div style="margin:6px 0"><strong style="color:#4e9eff">Modules:</strong><ul style="margin:4px 0 0 16px;color:#ccc">${vt.modules.map(m=>`<li style="margin:2px 0">${m}</li>`).join('')}</ul></div>`:''}
+                                        ${vt.schedule && (vt.schedule.sessions_per_week || vt.schedule.duration_weeks) ? `<div style="margin:6px 0"><strong style="color:#4e9eff">Schedule:</strong> ${vt.schedule.sessions_per_week||0}x/week · ${vt.schedule.duration_weeks||0} weeks</div>`:''}
+                                        ${Array.isArray(vt.home_exercises) && vt.home_exercises.length ? `<div style="margin:6px 0"><strong style="color:#4e9eff">Home:</strong><ul style="margin:4px 0 0 16px;color:#ccc">${vt.home_exercises.map(m=>`<li style="margin:2px 0">${m}</li>`).join('')}</ul></div>`:''}
+                                        ${vt.rationale ? `<div style="margin-top:8px;color:#bbb;font-size:0.9rem;line-height:1.4">${vt.rationale}</div>`:''}
+                                    </div>
+                                </div>
+                            </div>
+                            `: ''}
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+                                <div>
+                                    <div style="color:#dc3545;font-weight:700;margin-bottom:6px">High Risk</div>
+                                    <ul>${(rf.high_risk||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                                </div>
+                                <div>
+                                    <div style="color:#ffc107;font-weight:700;margin-bottom:6px">Medium Risk</div>
+                                    <ul>${(rf.medium_risk||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                                </div>
+                                <div>
+                                    <div style="color:#28a745;font-weight:700;margin-bottom:6px">Protective</div>
+                                    <ul>${(rf.protective||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                                </div>
+                            </div>`;
+                    }
+                }
+                // History table from Supabase
+                this.fetchAndRenderHistory();
+            }
+
+            async fetchAndRenderHistory(){
+                try{
+                    if(!(window.SUPABASE_CONFIG && window.supabase)) return;
+                    const supa = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    const { data, error } = await supa.from('predictions').select('*').order('created_at', { ascending:false }).limit(50);
+                    if(error) throw error;
+                    const rows = data || [];
+
+                    // Summary metrics
+                    const total = rows.length;
+                    const avgProb = total ? (rows.reduce((s,r)=> s + (r.probability||0), 0) / total) : 0;
+                    const positiveRate = total ? (rows.reduce((s,r)=> s + (r.will_benefit ? 1 : 0), 0) / total) : 0;
+                    const metricTotal = document.getElementById('metricTotal');
+                    const metricAvgProb = document.getElementById('metricAvgProb');
+                    const metricPositive = document.getElementById('metricPositive');
+                    if (metricTotal) metricTotal.textContent = String(total);
+                    if (metricAvgProb) metricAvgProb.textContent = total ? `${(avgProb*100).toFixed(1)}%` : '–';
+                    if (metricPositive) metricPositive.textContent = total ? `${(positiveRate*100).toFixed(1)}%` : '–';
+
+                    // Trend (avg probability per day)
+                    const byDay = new Map();
+                    rows.forEach(r => {
+                        const d = r.created_at ? new Date(r.created_at) : new Date();
+                        const key = d.toISOString().slice(0,10);
+                        const prob = typeof r.probability === 'number' ? r.probability : null;
+                        if (prob==null || isNaN(prob)) return;
+                        if (!byDay.has(key)) byDay.set(key, []);
+                        byDay.get(key).push(prob);
+                    });
+                    const labels = Array.from(byDay.keys()).sort();
+                    const series = labels.map(k => {
+                        const arr = byDay.get(k);
+                        return Math.round((arr.reduce((a,b)=>a+b,0)/arr.length)*10000)/100; // percent
+                    });
+                    const trendCtx = document.getElementById('trendChart');
+                    if (trendCtx && window.Chart && labels.length) {
+                        new Chart(trendCtx, {
+                            type: 'line',
+                            data: { labels, datasets: [{ label:'Avg Probability %', data: series, tension:0.3, borderColor:'#4e9eff', backgroundColor:'rgba(78,158,255,0.2)', fill:true }] },
+                            options: { plugins:{ legend:{ labels:{ color:'#fff' } } }, scales:{ x:{ ticks:{ color:'#fff' } }, y:{ ticks:{ color:'#fff' }, suggestedMax:100 } } }
+                        });
+                    }
+
+                    // History table
+                    const card = document.getElementById('historyCard');
+                    if (!card) return;
+                    if(rows.length===0){ card.style.display='none'; return; }
+                    card.style.display='block';
+                    const tbody = document.querySelector('#historyTable tbody');
+                    tbody.innerHTML='';
+                    rows.forEach(r=>{
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="border-bottom:1px solid #222;padding:8px">${new Date(r.created_at||Date.now()).toLocaleString()}</td>
+                            <td style="border-bottom:1px solid #222;padding:8px">${r.patient_name||''}</td>
+                            <td style="border-bottom:1px solid #222;padding:8px">${r.probability!=null ? (r.probability*100).toFixed(1)+'%':''}</td>
+                            <td style="border-bottom:1px solid #222;padding:8px">${r.confidence||''}</td>
+                            <td style="border-bottom:1px solid #222;padding:8px">${r.recommendation||''}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                    const exportBtn = document.getElementById('exportBtn');
+                    if (exportBtn) exportBtn.onclick = () => {
+                        const header = ['Time','Patient','Probability','Confidence','Recommendation'];
+                        const rowsCsv = rows.map(r=>[
+                            new Date(r.created_at||Date.now()).toISOString(),
+                            r.patient_name||'',
+                            r.probability!=null ? (r.probability*100).toFixed(1)+'%':'',
+                            r.confidence||'',
+                            r.recommendation||''
+                        ]);
+                        const csv = [header, ...rowsCsv].map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+                        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a'); a.href = url; a.download = 'predictions.csv'; a.click(); URL.revokeObjectURL(url);
+                    };
+                }catch(e){ console.warn('History load error', e); }
+            }
+
+            getConfidenceColor(confidence){
+                const c = (confidence||'').toLowerCase();
+                if(c==='high') return '#28a745';
+                if(c==='medium') return '#ffc107';
+                return '#dc3545';
             }
 
             getConfidenceClass(confidence) {
@@ -656,11 +1517,17 @@
                     outdoor_time: 3.5,
                     screen_time: 2.0,
                     previous_myopia_control: '0',
-                    initial_power_re: -1.5,
-                    initial_power_le: -1.25,
-                    initial_axial_length_re: 22.8,
-                    initial_axial_length_le: 22.7,
-                    stellest_wearing_time: 14.0
+                    right_eye_spherical: -2.0,
+                    right_eye_cylinder: -0.5,
+                    left_eye_spherical: -1.75,
+                    left_eye_cylinder: -0.25,
+                    right_eye_axial_length: 22.8,
+                    left_eye_axial_length: 22.7,
+                    keratometry_k1_re: 43.25,
+                    keratometry_k2_re: 44.50,
+                    keratometry_k1_le: 43.00,
+                    keratometry_k2_le: 44.25,
+                    new_stellest_lenses: '1'
                 };
 
                 const patientNameField = document.getElementById('patient_name');
@@ -675,12 +1542,70 @@
             }
         }
 
+        // Navbar avatar/profile setup
+        (function initNavbar(){
+            const avatarBtn = document.getElementById('avatarBtn');
+            const menu = document.getElementById('profileMenu');
+            const info = document.getElementById('profileInfo');
+            const signout = document.getElementById('profileSignout');
+            const dashLink = document.getElementById('navDashboard');
+
+            if (dashLink) {
+                dashLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const el = document.getElementById('analytics') || document.getElementById('analyticsContainer');
+                    if (el) el.scrollIntoView({ behavior:'smooth' });
+                });
+            }
+
+            let display = 'U';
+            let subtitle = '';
+            try {
+                const u = JSON.parse(localStorage.getItem('stellest_user')||'{}');
+                const name = u.name || [u.firstName, u.lastName].filter(Boolean).join(' ') || (u.email ? u.email.split('@')[0] : 'User');
+                display = name ? name.trim().charAt(0).toUpperCase() : 'U';
+                subtitle = u.email || '';
+            } catch {}
+
+            if (avatarBtn) avatarBtn.textContent = display;
+            if (info) info.innerHTML = `<div style="font-weight:700;color:#fff;margin-bottom:2px">Profile</div><div style="font-size:0.9rem">${subtitle}</div>`;
+
+            const toggle = () => { if (menu) menu.style.display = (menu.style.display==='block'?'none':'block'); };
+            if (avatarBtn) avatarBtn.addEventListener('click', toggle);
+            document.addEventListener('click', (e) => {
+                if (!menu) return;
+                const target = e.target;
+                if (target===avatarBtn || avatarBtn.contains(target)) return;
+                if (!menu.contains(target)) menu.style.display = 'none';
+            });
+
+            if (signout) signout.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    if (window.SUPABASE_CONFIG && window.supabase) {
+                        const supa = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                        await supa.auth.signOut();
+                    }
+                } catch {}
+                localStorage.removeItem('stellest_token');
+                localStorage.removeItem('stellest_user');
+                window.location.replace('/signin');
+            });
+        })();
+
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new StellestAIApp();
+            
+            // Show analytics container by default
+            const analyticsContainer = document.getElementById('analyticsContainer');
+            if (analyticsContainer) {
+                analyticsContainer.style.display = 'block';
+            }
         });
     </script>
     <script src="/supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 </body>
 </html>

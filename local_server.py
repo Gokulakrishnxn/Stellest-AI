@@ -27,14 +27,6 @@ async def root():
             return f.read()
     return HTMLResponse("<h1>index.html not found</h1>")
 
-@app.get("/dashboard", response_class=HTMLResponse)
-async def dashboard():
-    page = os.path.join(BASE_DIR, "dashboard.html")
-    if os.path.exists(page):
-        with open(page, "r", encoding="utf-8") as f:
-            return f.read()
-    return HTMLResponse("<h1>dashboard.html not found</h1>")
-
 @app.get("/signin", response_class=HTMLResponse)
 async def signin():
     page = os.path.join(BASE_DIR, "signin.html")

@@ -60,7 +60,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         if (localStorage.getItem('stellest_token')) {
-            window.location.replace('/');
+            window.location.replace('/app');
         }
 
         const form = document.getElementById('signinForm');
@@ -96,7 +96,7 @@
                 const session = data.session;
                 localStorage.setItem('stellest_token', session.access_token);
                 localStorage.setItem('stellest_user', JSON.stringify({ email, provider: 'password' }));
-                window.location.replace('/');
+                window.location.replace('/app');
             } catch (e) {
                 console.error(e);
                 err.textContent = e.message || 'Sign-in failed';
@@ -110,10 +110,13 @@
             gbtn.disabled = true; gbtn.textContent = 'Connecting to Google...';
             try {
                 if (!supabaseClient) throw new Error('Supabase not configured');
-                const { data, error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/signin'
+                    }
+                });
                 if (error) throw error;
-                // For PKCE flow, Supabase will redirect; for popup, we could handle result.
-                // Here we assume redirect; if data.url is present, navigate to it.
                 if (data && data.url) {
                     window.location.href = data.url;
                     return;

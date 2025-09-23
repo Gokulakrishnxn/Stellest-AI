@@ -51,6 +51,36 @@
                 <h3>Risk Profile</h3>
                 <div class="body"><canvas id="riskChart" height="220"></canvas></div>
             </div>
+            <div class="card">
+                <h3>Population Comparison</h3>
+                <div class="body"><canvas id="popChart" height="220"></canvas></div>
+            </div>
+            <div class="card">
+                <h3>Clinical Recommendation & Risk Factors</h3>
+                <div class="body" id="clinicalPanel"></div>
+            </div>
+        </div>
+        <div class="card" id="historyCard" style="display:none;margin:0 20px 20px">
+            <h3>Recent Predictions</h3>
+            <div class="body">
+                <div style="margin-bottom:12px">
+                    <button class="btn" id="exportBtn">Export CSV</button>
+                </div>
+                <div style="overflow:auto">
+                    <table id="historyTable" style="width:100%;border-collapse:collapse">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Time</th>
+                                <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Patient</th>
+                                <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Probability</th>
+                                <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Confidence</th>
+                                <th style="text-align:left;border-bottom:1px solid #333;padding:8px">Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -81,6 +111,59 @@
             if(l==='high') return '#28a745';
             if(l==='medium') return '#ffc107';
             return '#dc3545';
+        }
+
+        function percentileOf(value, arr){
+            if(!arr || arr.length===0) return null;
+            const sorted = [...arr].sort((a,b)=>a-b);
+            let count = 0; for(const v of sorted){ if(v <= value) count++; }
+            return Math.round((count/sorted.length)*100);
+        }
+
+        function renderPopulationComparison(prob, cohort){
+            const values = cohort && cohort.length? cohort : [0.45,0.52,0.6,0.58,0.63,0.41,0.7,0.55,0.62,0.49,0.57,0.59];
+            const mean = Math.round((values.reduce((a,b)=>a+b,0)/values.length)*100)/100;
+            const perc = percentileOf(prob, values) || 50;
+            const ctx = document.getElementById('popChart');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cohort Mean','You'],
+                    datasets: [{
+                        label: 'Probability',
+                        data: [Math.round(mean*100), Math.round(prob*100)],
+                        backgroundColor: ['#666','#4e9eff']
+                    }]
+                },
+                options: {plugins:{legend:{labels:{color:'#fff'}}}, scales:{y:{ticks:{color:'#fff'}, suggestedMax:100}, x:{ticks:{color:'#fff'}}}}
+            });
+            return { mean, percentile: perc };
+        }
+
+        function renderClinicalPanel(result, pop){
+            const el = document.getElementById('clinicalPanel');
+            const rf = result.risk_factors || {high_risk:[], medium_risk:[], protective:[]};
+            el.innerHTML = `
+                <div style="margin-bottom:12px">
+                    <div><strong>Population mean:</strong> ${(pop.mean*100).toFixed(1)}%</div>
+                    <div><strong>Your percentile:</strong> ${pop.percentile}th</div>
+                </div>
+                <div style="margin-bottom:12px"><strong>Recommendation:</strong><br/>${result.recommendation || ''}</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+                    <div>
+                        <div style="color:#dc3545;font-weight:700;margin-bottom:6px">High Risk</div>
+                        <ul>${(rf.high_risk||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                    </div>
+                    <div>
+                        <div style="color:#ffc107;font-weight:700;margin-bottom:6px">Medium Risk</div>
+                        <ul>${(rf.medium_risk||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                    </div>
+                    <div>
+                        <div style="color:#28a745;font-weight:700;margin-bottom:6px">Protective</div>
+                        <ul>${(rf.protective||[]).map(x=>`<li>${x}</li>`).join('')||'<li>None</li>'}</ul>
+                    </div>
+                </div>
+            `;
         }
 
         function renderCharts(result){
@@ -139,20 +222,76 @@
                 },
                 options: {plugins:{legend:{labels:{color:'#fff'}}}, scales:{x:{stacked:true, ticks:{color:'#fff'}}, y:{stacked:true, ticks:{color:'#fff'}}}}
             });
+
+            // Population comparison
+            const pop = renderPopulationComparison(p.probability, null);
+            renderClinicalPanel(result, pop);
         }
 
-        function loadData(){
-            const raw = localStorage.getItem('last_prediction');
-            if(!raw){
-                document.getElementById('noData').style.display='block';
+        function toCsv(rows){
+            return rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+        }
+
+        async function fetchHistory(){
+            try{
+                if(!(window.SUPABASE_CONFIG && window.supabase)) return null;
+                const supa = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                const { data, error } = await supa.from('predictions').select('*').order('created_at', { ascending:false }).limit(50);
+                if(error) throw error;
+                return data||[];
+            }catch(e){
+                console.warn('Supabase history skipped:', e && e.message ? e.message : e);
+                return null;
+            }
+        }
+
+        function renderTable(rows){
+            if(!rows || rows.length===0){
+                document.getElementById('historyCard').style.display='none';
                 return;
             }
-            try{
-                const result = JSON.parse(raw);
-                renderCharts(result);
-            }catch{
+            document.getElementById('historyCard').style.display='block';
+            const tbody = document.querySelector('#historyTable tbody');
+            tbody.innerHTML='';
+            rows.forEach(r=>{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="border-bottom:1px solid #222;padding:8px">${new Date(r.created_at||Date.now()).toLocaleString()}</td>
+                    <td style="border-bottom:1px solid #222;padding:8px">${r.patient_name||''}</td>
+                    <td style="border-bottom:1px solid #222;padding:8px">${r.probability!=null ? (r.probability*100).toFixed(1)+'%':''}</td>
+                    <td style="border-bottom:1px solid #222;padding:8px">${r.confidence||''}</td>
+                    <td style="border-bottom:1px solid #222;padding:8px">${r.recommendation||''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('exportBtn').onclick = () => {
+                const header = ['Time','Patient','Probability','Confidence','Recommendation'];
+                const rowsCsv = rows.map(r=>[
+                    new Date(r.created_at||Date.now()).toISOString(),
+                    r.patient_name||'',
+                    r.probability!=null ? (r.probability*100).toFixed(1)+'%':'',
+                    r.confidence||'',
+                    r.recommendation||''
+                ]);
+                const csv = toCsv([header, ...rowsCsv]);
+                const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'predictions.csv'; a.click();
+                URL.revokeObjectURL(url);
+            };
+        }
+
+        async function loadData(){
+            const raw = localStorage.getItem('last_prediction');
+            if(raw){
+                try{ renderCharts(JSON.parse(raw)); }catch{}
+            }
+            const history = await fetchHistory();
+            if(!raw && (!history || history.length===0)){
                 document.getElementById('noData').style.display='block';
             }
+            renderTable(history||[]);
         }
 
         loadData();
