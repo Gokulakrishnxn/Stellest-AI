@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Stellest AI</title>
+    <style>
+        :root{--bg:#000;--panel:#111;--field:#1a1a1a;--text:#fff;--muted:#aaa;--border:#333;--accent:#fff;--success:#28a745;--warn:#ffc107;--danger:#dc3545}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .header{background:#111;border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;z-index:10}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px}
+        .row{display:flex;justify-content:space-between;align-items:center}
+        .logo{font-weight:800}
+        .nav a{color:#fff;text-decoration:none;margin-left:12px}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;padding:20px}
+        .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+        .card h3{padding:14px 16px;border-bottom:1px solid var(--border)}
+        .card .body{padding:16px}
+        .info{padding:16px;color:var(--muted)}
+        .btn{display:inline-block;background:#fff;color:#000;border:none;border-radius:10px;padding:10px 14px;font-weight:700;text-decoration:none}
+        canvas{background:#0d0d0d;border-radius:12px}
+        .footer{border-top:1px solid var(--border);padding:20px 0;text-align:center;color:var(--muted)}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container row">
+            <div class="logo">🔬 Stellest AI — Dashboard</div>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/signin" id="signoutLink">Sign out</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="noData" class="info" style="display:none">No prediction data found. Make a prediction on the Home page first.</div>
+        <div id="summary" class="info" style="display:none"></div>
+        <div class="grid" id="charts" style="display:none">
+            <div class="card">
+                <h3>Overall Probability</h3>
+                <div class="body"><canvas id="probChart" height="220"></canvas></div>
+            </div>
+            <div class="card">
+                <h3>Individual Models</h3>
+                <div class="body"><canvas id="modelsChart" height="220"></canvas></div>
+            </div>
+            <div class="card">
+                <h3>Risk Profile</h3>
+                <div class="body"><canvas id="riskChart" height="220"></canvas></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">Developed by <a href="https://gokulakrishnan.dev" target="_blank" style="color:#fff">Gokulakrishnan</a></div>
+    </footer>
+
+    <script src="/supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>
+        // Optional signout via Supabase
+        document.getElementById('signoutLink').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                if (window.SUPABASE_CONFIG && window.supabase) {
+                    const supa = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+                    await supa.auth.signOut();
+                }
+            } catch {}
+            localStorage.removeItem('stellest_token');
+            localStorage.removeItem('stellest_user');
+            window.location.replace('/signin');
+        });
+
+        function getConfidenceColor(level){
+            const l = (level||'').toLowerCase();
+            if(l==='high') return '#28a745';
+            if(l==='medium') return '#ffc107';
+            return '#dc3545';
+        }
+
+        function renderCharts(result){
+            const charts = document.getElementById('charts');
+            const summary = document.getElementById('summary');
+            charts.style.display = 'grid';
+            summary.style.display = 'block';
+
+            const name = result.patient_name || 'Patient';
+            const p = result.ensemble_prediction || result;
+            summary.innerHTML = `
+                <div style="margin:12px 0">
+                    <div><strong>Patient:</strong> ${name}</div>
+                    <div><strong>Probability:</strong> ${(p.probability*100).toFixed(1)}% — <span style="color:${getConfidenceColor(p.confidence)}">${p.confidence} confidence</span></div>
+                    <div><strong>Recommendation:</strong> ${result.recommendation || (p.will_benefit?'Recommended':'Consider alternatives')}</div>
+                </div>`;
+
+            // Overall probability (doughnut)
+            const probCtx = document.getElementById('probChart');
+            new Chart(probCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Benefit probability', 'Remainder'],
+                    datasets: [{
+                        data: [Math.round(p.probability*100), 100-Math.round(p.probability*100)],
+                        backgroundColor: [getConfidenceColor(p.confidence),'#222'],
+                        borderColor: ['#000','#000']
+                    }]
+                },
+                options: {plugins:{legend:{labels:{color:'#fff'}}}}
+            });
+
+            // Individual models (bar)
+            const models = result.individual_models || {};
+            const labels = Object.keys(models).map(m=>m.replace(/_/g,' ').replace(/\b\w/g, s=>s.toUpperCase()));
+            const values = Object.values(models).map(v=>Math.max(0, Math.min(100, Math.round((v.probability||0)*100))));
+            const modelsCtx = document.getElementById('modelsChart');
+            new Chart(modelsCtx, {
+                type: 'bar',
+                data: {labels, datasets:[{label:'Probability %', data: values, backgroundColor:'#4e9eff'}]},
+                options: {scales:{x:{ticks:{color:'#fff'}}, y:{ticks:{color:'#fff'}, suggestedMax:100}}, plugins:{legend:{labels:{color:'#fff'}}}}
+            });
+
+            // Risk profile (stacked bar)
+            const rf = result.risk_factors || {high_risk:[], medium_risk:[], protective:[]};
+            const riskCtx = document.getElementById('riskChart');
+            new Chart(riskCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Risk Factors'],
+                    datasets: [
+                        {label:'High', data:[rf.high_risk.length], backgroundColor:'#dc3545'},
+                        {label:'Medium', data:[rf.medium_risk.length], backgroundColor:'#ffc107'},
+                        {label:'Protective', data:[rf.protective.length], backgroundColor:'#28a745'}
+                    ]
+                },
+                options: {plugins:{legend:{labels:{color:'#fff'}}}, scales:{x:{stacked:true, ticks:{color:'#fff'}}, y:{stacked:true, ticks:{color:'#fff'}}}}
+            });
+        }
+
+        function loadData(){
+            const raw = localStorage.getItem('last_prediction');
+            if(!raw){
+                document.getElementById('noData').style.display='block';
+                return;
+            }
+            try{
+                const result = JSON.parse(raw);
+                renderCharts(result);
+            }catch{
+                document.getElementById('noData').style.display='block';
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
